@@ -24,18 +24,17 @@ public class Selction : MonoBehaviour
 
     void FixedUpdate ()
     {
-        Ray mouseRay = mainCamera.ScreenPointToRay(CrossPlatformInputManager.mousePosition);
-        Debug.DrawRay(mouseRay.origin, mouseRay.direction * 6f, Color.red);
-        RaycastHit hitInfo;
-        if (Physics.Raycast(mouseRay, out hitInfo, Mathf.Infinity, LayerMask.GetMask("Selectable")))
+        if (CrossPlatformInputManager.GetButton("Select"))
         {
-            Debug.Log("lksjdf");
-            select(hitInfo.collider.gameObject);
+            Ray mouseRay = mainCamera.ScreenPointToRay(CrossPlatformInputManager.mousePosition);
+            if (!Physics.Raycast(mouseRay, Mathf.Infinity, LayerMask.GetMask("Window")))
+            {
+                RaycastHit hitInfo;
+                if (Physics.Raycast(mouseRay, out hitInfo, Mathf.Infinity, LayerMask.GetMask("Selectable")))
+                {
+                    hitInfo.collider.GetComponent<Selectable>().select();
+                }
+            }
         }
-    }
-
-    private void select (GameObject selectable)
-    {
-        Destroy(selectable);
     }
 }
