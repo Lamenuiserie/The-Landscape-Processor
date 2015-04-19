@@ -52,7 +52,7 @@ public class SelectableManager : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        // TODO REMOVE
+        // TODO REMOVE for build
         if (Input.GetKeyDown(KeyCode.O))
         {
             foreach (Selectable selectable in selectablesFolder.GetComponentsInChildren<Selectable>())
@@ -137,14 +137,5 @@ public class SelectableManager : MonoBehaviour
         selectable.GetComponent<Selectable>().speed = selectableSpeed;
 
         return selectable;
-    }
-
-    /// <summary>
-    /// Warp an object back to the start.
-    /// </summary>
-    /// <param name="objectToWarp"></param>
-    public void warp (Transform objectToWarp)
-    {
-        objectToWarp.position = new Vector3(startArea.transform.position.x, objectToWarp.position.y, objectToWarp.position.z);
     }
 }
