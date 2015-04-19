@@ -26,7 +26,7 @@ public class Selectable : MonoBehaviour
     {
         if (!selected)
         {
-            transform.Translate(new Vector3(speed * Time.deltaTime, 0f, 0f));
+            transform.Translate(new Vector3(speed * Time.deltaTime, 0f, 0f), Space.World);
         }
 	}
 
