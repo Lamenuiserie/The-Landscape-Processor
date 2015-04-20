@@ -71,10 +71,7 @@ public class Selection : MonoBehaviour
                 authorMaterial.color = new Color(authorMaterial.color.r, authorMaterial.color.g, authorMaterial.color.b, 1f - (uiFadeTimer / 3f));
             }
         }
-	}
 
-    void FixedUpdate ()
-    {
         if (CrossPlatformInputManager.GetButtonDown("Select"))
         {
             Ray mouseRay = mainCamera.ScreenPointToRay(CrossPlatformInputManager.mousePosition);
@@ -92,5 +89,12 @@ public class Selection : MonoBehaviour
                 }
             }
         }
+	}
+
+
+
+    void FixedUpdate()
+    {
+
     }
 }
