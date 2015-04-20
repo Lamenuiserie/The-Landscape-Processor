@@ -6,7 +6,7 @@ public class Selectable : MonoBehaviour
     /// <summary>
     /// Speed of the selectable.
     /// </summary>
-    public float speed { get; set; }
+    public float speed;
 
 
     /// <summary>
@@ -32,8 +32,18 @@ public class Selectable : MonoBehaviour
 
     public void select ()
     {
-        selected = true;
-        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-        gameObject.layer = LayerMask.NameToLayer("Default");
+        if (!selected)
+        {
+            selected = true;
+            transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 2f);
+            gameObject.layer = LayerMask.NameToLayer("Selected");
+        }
+        else
+        {
+            selected = false;
+            transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 2f);
+            gameObject.layer = LayerMask.NameToLayer("Selectable");
+        }
+        
     }
 }
