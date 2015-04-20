@@ -10,10 +10,13 @@ public class Selection : MonoBehaviour
     /// </summary>
     private Camera mainCamera;
 
+    private Material titleMaterial;
+    private Material authorMaterial;
+
     // UI
-    private Text title;
-    private Text author;
-    private Text instructions;
+    private GameObject title;
+    private GameObject author;
+    private GameObject instructions;
 
     //
     private bool uiFade;
@@ -25,9 +28,12 @@ public class Selection : MonoBehaviour
 	void Start ()
     {
         mainCamera = GetComponentInChildren<Camera>();
-        title = GameObject.Find("Title").GetComponent<Text>();
-        author = GameObject.Find("Author").GetComponent<Text>();
-        instructions = GameObject.Find("Instructions").GetComponent<Text>();
+        title = GameObject.Find("Title");
+        author = GameObject.Find("Author");
+        instructions = GameObject.Find("Instructions");
+
+        titleMaterial = title.GetComponent<MeshRenderer>().material;
+        authorMaterial = author.GetComponent<MeshRenderer>().material;
 
         uiFade = false;
         uiTimer = 0f;
@@ -37,7 +43,7 @@ public class Selection : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if (title.enabled && !uiFade)
+        if (title.activeSelf && !uiFade)
         {
             if (uiTimer < 6f)
             {
@@ -55,32 +61,33 @@ public class Selection : MonoBehaviour
             uiFadeTimer += Time.deltaTime;
             if (uiFadeTimer > 3f)
             {
-                title.enabled = false;
-                author.enabled = false;
+                title.SetActive(false);
+                author.SetActive(false);
                 uiFade = false;
             }
             else
             {
-                title.color = new Color(title.color.r, title.color.g, title.color.b, 1f - (uiFadeTimer / 3f));
-                author.color = new Color(author.color.r, author.color.g, author.color.b, 1f - (uiFadeTimer / 3f));
+                titleMaterial.color = new Color(titleMaterial.color.r, titleMaterial.color.g, titleMaterial.color.b, 1f - (uiFadeTimer / 3f));
+                authorMaterial.color = new Color(authorMaterial.color.r, authorMaterial.color.g, authorMaterial.color.b, 1f - (uiFadeTimer / 3f));
             }
         }
 	}
 
     void FixedUpdate ()
     {
-        if (CrossPlatformInputManager.GetButton("Select"))
+        if (CrossPlatformInputManager.GetButtonDown("Select"))
         {
             Ray mouseRay = mainCamera.ScreenPointToRay(CrossPlatformInputManager.mousePosition);
-            if (!Physics.Raycast(mouseRay, Mathf.Infinity, LayerMask.GetMask("Window", "Default")))
+            if (!Physics.Raycast(mouseRay, Mathf.Infinity, LayerMask.GetMask("Window")))
             {
                 RaycastHit hitInfo;
-                if (Physics.Raycast(mouseRay, out hitInfo, Mathf.Infinity, LayerMask.GetMask("Selectable")))
+                if (Physics.SphereCast(mouseRay, 0.5f, out hitInfo, Mathf.Infinity, LayerMask.GetMask("Selectable", "Selected")))
                 {
                     hitInfo.collider.GetComponent<Selectable>().select();
-                    if (instructions.enabled)
+                    AudioManager.instance.playSelection();
+                    if (instructions.activeSelf)
                     {
-                        instructions.enabled = false;
+                        instructions.SetActive(false);
                     }
                 }
             }
