@@ -76,7 +76,7 @@ ModelImporter:
     4300024: Sphere
     4300026: Sphere.018
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
   animations:
