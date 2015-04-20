@@ -3,6 +3,9 @@ using System.Collections;
 
 public class AudioManager : MonoBehaviour
 {
+    // SFX
+    public AudioClip[] selections;
+
 	/// <summary>
 	/// The only instance of the audio manager.
 	/// </summary>
@@ -34,7 +37,7 @@ public class AudioManager : MonoBehaviour
 	void Start ()
 	{
 		// Components
-		thisAudio = GetComponent<AudioSource>();
+		thisAudio = GetComponents<AudioSource>()[0];
 	}
 
 	// Update is called once per frame
@@ -42,4 +45,9 @@ public class AudioManager : MonoBehaviour
 	{
 
 	}
+
+    public void playSelection ()
+    {
+        thisAudio.PlayOneShot(selections[Random.Range(0, selections.Length)], 0.7f);
+    }
 }
