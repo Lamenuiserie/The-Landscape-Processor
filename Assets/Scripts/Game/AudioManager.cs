@@ -40,14 +40,11 @@ public class AudioManager : MonoBehaviour
 		thisAudio = GetComponents<AudioSource>()[0];
 	}
 
-	// Update is called once per frame
-	void Update ()
-	{
-
-	}
-
     public void playSelection ()
     {
-        thisAudio.PlayOneShot(selections[Random.Range(0, selections.Length)], 0.7f);
+        if (!thisAudio.isPlaying)
+        {
+            thisAudio.PlayOneShot(selections[Random.Range(0, selections.Length)], 0.7f);
+        }
     }
 }
