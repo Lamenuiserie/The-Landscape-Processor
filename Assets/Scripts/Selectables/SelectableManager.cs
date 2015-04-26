@@ -3,6 +3,16 @@ using System.Collections;
 
 public class SelectableManager : MonoBehaviour
 {
+    /************* ENUMS **************/
+    /// <summary>
+    /// Types of selectables.
+    /// </summary>
+    public enum Types { Building, Tree, Mountain, Cloud };
+    /// <summary>
+    /// Sizes of selectables.
+    /// </summary>
+    public enum Sizes { Small, Medium, Big };
+
     /************* PUBLIC VARIABLES **************/
     // Procedural spawning of selectables
     public float minTimeBetweenSpawn;
@@ -22,14 +32,19 @@ public class SelectableManager : MonoBehaviour
     public Vector3 layerAir3;
 
     // Prefabs
+    public Transform[] selectablePrefabs;
     public Transform buildingSmall;
     public Transform buildingMedium;
     public Transform buildingBig;
     public Transform mountainSmall;
     public Transform mountainMedium;
     public Transform mountainBig;
-    public Transform tree;
-    public Transform cloud;
+    public Transform treeSmall;
+    public Transform treeMedium;
+    public Transform treeBig;
+    public Transform cloudSmall;
+    public Transform cloudMedium;
+    public Transform cloudBig;
     public Transform road;
     public Transform pylon;
 
@@ -177,9 +192,9 @@ public class SelectableManager : MonoBehaviour
                 bigPrefab = mountainBig;
                 break;
             case 2:
-                smallPrefab = tree;
-                mediumPrefab = tree;
-                bigPrefab = tree;
+                smallPrefab = treeSmall;
+                mediumPrefab = treeMedium;
+                bigPrefab = treeBig;
                 break;
         }
 
@@ -211,6 +226,66 @@ public class SelectableManager : MonoBehaviour
         return selectable;
     }
 
+
+    public void spawnBiggerSelectable (GameObject selectable1, GameObject selectable2, Types type, Sizes size)
+    {
+        Transform newSelectablePrefab = buildingBig;
+        switch (type)
+        {
+            case Types.Building:
+                if (size == Sizes.Small)
+                {
+                    newSelectablePrefab = buildingMedium;
+                }
+                else if (size == Sizes.Medium)
+                {
+                    newSelectablePrefab = buildingBig;
+                }
+                break;
+            case Types.Tree:
+                if (size == Sizes.Small)
+                {
+                    newSelectablePrefab = treeMedium;
+                }
+                else if (size == Sizes.Medium)
+                {
+                    newSelectablePrefab = treeBig;
+                }
+                break;
+            case Types.Mountain:
+                if (size == Sizes.Small)
+                {
+                    newSelectablePrefab = mountainMedium;
+                }
+                else if (size == Sizes.Medium)
+                {
+                    newSelectablePrefab = mountainBig;
+                }
+                break;
+            case Types.Cloud:
+                if (size == Sizes.Small)
+                {
+                    newSelectablePrefab = cloudMedium;
+                }
+                else if (size == Sizes.Medium)
+                {
+                    newSelectablePrefab = cloudBig;
+                }
+                break;
+        }
+        Transform newSelectable = Instantiate(newSelectablePrefab) as Transform;
+        newSelectable.position = new Vector3(selectable1.transform.position.x + Mathf.Abs(selectable1.transform.position.x - selectable2.transform.position.x) / 2, selectable1.transform.position.y, selectable1.transform.position.z);
+
+        // Adapt to the inclination of the ground
+        newSelectable.Rotate(newSelectable.right, 4f, Space.World);
+        // Randomize the rotation
+        newSelectable.Rotate(newSelectable.up, Random.rotation.eulerAngles.y, Space.World);
+
+        // Destroy the old ones
+        Destroy(selectable1);
+        Destroy(selectable2);
+    }
+
     /// <summary>
     /// Spawn a selectable in on of the air layer and return the transform of the object.
     /// </summary>
@@ -218,15 +293,15 @@ public class SelectableManager : MonoBehaviour
     private Transform spawnSelectableAir(Vector3 layer)
     {
         // Select size
-        Transform prefab = cloud;
+        Transform prefab = cloudSmall;
         int size = Random.Range(0, 6);
         if (size >= 3 && size < 5)
         {
-            prefab = cloud;
+            prefab = cloudMedium;
         }
         else if (size == 5)
         {
-            prefab = cloud;
+            prefab = cloudBig;
         }
 
         // Spawn the selectable
