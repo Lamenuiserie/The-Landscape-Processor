@@ -44,7 +44,7 @@ public class AudioManager : MonoBehaviour
     {
         if (!thisAudio.isPlaying)
         {
-            thisAudio.PlayOneShot(selections[Random.Range(0, selections.Length)], 0.7f);
+            thisAudio.PlayOneShot(selections[Random.Range(0, selections.Length)], 0.5f);
         }
     }
 }
