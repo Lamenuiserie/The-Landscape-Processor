@@ -4,10 +4,22 @@ using System.Collections;
 public class Selectable : MonoBehaviour
 {
     /// <summary>
+    /// The selectable manager.
+    /// </summary>
+    private SelectableManager selectableManager;
+
+    /// <summary>
     /// Speed of the selectable.
     /// </summary>
     public float speed;
-
+    /// <summary>
+    /// The type of the selectable;
+    /// </summary>
+    public SelectableManager.Types type;
+    /// <summary>
+    /// The size of the selectable;
+    /// </summary>
+    public SelectableManager.Sizes size;
 
     /// <summary>
     /// Whether the selectable was selected.
@@ -18,6 +30,10 @@ public class Selectable : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
+        // 
+        selectableManager = GetComponentInParent<SelectableManager>();
+
+        // Init
         selected = false;
 	}
 	
@@ -45,5 +61,14 @@ public class Selectable : MonoBehaviour
             gameObject.layer = LayerMask.NameToLayer("Selectable");
         }
         
+    }
+
+    void OnTriggerEnter (Collider collider)
+    {
+        if (collider.gameObject.layer == LayerMask.NameToLayer("Selected") && collider.GetComponent<Selectable>().type == type && size == collider.GetComponent<Selectable>().size && size != SelectableManager.Sizes.Big)
+        {
+            // TODO stop from spawning two versions
+            selectableManager.spawnBiggerSelectable(gameObject, collider.gameObject, type, size);
+        }
     }
 }
