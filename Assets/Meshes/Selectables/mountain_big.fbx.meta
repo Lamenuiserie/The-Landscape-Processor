@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: c5371376d4d26c340a6c6276e7eda293
-timeCreated: 1429452127
+guid: 88e01fe7170fbdd43964f4321a3b9fa3
+timeCreated: 1430252079
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Cube
+    4300000: Cone
   materials:
     importMaterials: 0
     materialName: 0

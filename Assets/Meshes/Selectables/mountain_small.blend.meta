@@ -1,15 +1,25 @@
 fileFormatVersion: 2
 guid: 941bb8129659a714eaea073c10e71130
-timeCreated: 1429372912
+timeCreated: 1430173953
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Cone
+    100004: Cylinder
     400000: //RootNode
+    400002: Cone
+    400004: Cylinder
     2300000: //RootNode
+    2300002: Cone
+    2300004: Cylinder
     3300000: //RootNode
+    3300002: Cone
+    3300004: Cylinder
     4300000: Cube
+    4300002: Cone
+    4300004: Cylinder
     7400000: Default Take
     9500000: //RootNode
   materials:

@@ -1,15 +1,24 @@
 fileFormatVersion: 2
-guid: f91b7d178e64e1b44af940ecafbcbc1c
-timeCreated: 1429372912
+guid: 18421a0a2b11589409d71924ec568388
+timeCreated: 1430252072
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Cube
+    100000: Cone
+    100002: Cylinder
+    100004: //RootNode
+    400000: Cone
+    400002: Cylinder
+    400004: //RootNode
+    2300000: Cone
+    2300002: Cylinder
+    2300004: //RootNode
+    3300000: Cone
+    3300002: Cylinder
+    3300004: //RootNode
+    4300000: Cone
+    4300002: Cylinder
   materials:
     importMaterials: 0
     materialName: 0
