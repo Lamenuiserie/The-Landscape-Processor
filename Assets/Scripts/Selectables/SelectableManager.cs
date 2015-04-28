@@ -7,7 +7,7 @@ public class SelectableManager : MonoBehaviour
     /// <summary>
     /// Types of selectables.
     /// </summary>
-    public enum Types { Building, Tree, Mountain, Cloud };
+    public enum Types { Building, Tree, Rock, Mountain, Cloud };
     /// <summary>
     /// Sizes of selectables.
     /// </summary>
@@ -23,14 +23,6 @@ public class SelectableManager : MonoBehaviour
     public float minCloudSpeed;
     public float maxCloudSpeed;
 
-    // Layers
-    public Vector3 layer1;
-    public Vector3 layer2;
-    public Vector3 layer3;
-    public Vector3 layerAir1;
-    public Vector3 layerAir2;
-    public Vector3 layerAir3;
-
     // Prefabs
     public Transform[] selectablePrefabs;
     public Transform buildingSmall;
@@ -39,20 +31,28 @@ public class SelectableManager : MonoBehaviour
     public Transform mountainSmall;
     public Transform mountainMedium;
     public Transform mountainBig;
+    public Transform rockSmall;
+    public Transform rockMedium;
+    public Transform rockBig;
     public Transform treeSmall;
     public Transform treeMedium;
     public Transform treeBig;
     public Transform cloudSmall;
     public Transform cloudMedium;
     public Transform cloudBig;
-    public Transform road;
-    public Transform pylon;
 
 
     /************* IMPORTANT GAME OBJECTS **************/
     // Warping areas
     private Transform startArea;
     private Transform selectablesFolder;
+    // Layers
+    private Vector3 groundLayer1;
+    private Vector3 groundLayer2;
+    private Vector3 groundLayer3;
+    private Vector3 airLayer1;
+    private Vector3 airLayer2;
+    private Vector3 airLayer3;
 
 
     /************* PRIVATE VARIABLES **************/
@@ -70,6 +70,13 @@ public class SelectableManager : MonoBehaviour
         // Important game objects
         startArea = transform.FindChild("StartArea");
         selectablesFolder = transform.FindChild("Selectables");
+        Transform layers = transform.FindChild("Layers");
+        groundLayer1 = layers.FindChild("GroundLayer1").transform.position;
+        groundLayer2 = layers.FindChild("GroundLayer2").transform.position;
+        groundLayer3 = layers.FindChild("GroundLayer3").transform.position;
+        airLayer1 = layers.FindChild("AirLayer1").transform.position;
+        airLayer2 = layers.FindChild("AirLayer2").transform.position;
+        airLayer3 = layers.FindChild("AirLayer3").transform.position;
 
         // Init
         timerRandomSpawn = 0f;
@@ -115,7 +122,7 @@ public class SelectableManager : MonoBehaviour
             {
                 if (Random.value >= (maxTimeBetweenSpawn - timerLayer1) / maxTimeBetweenSpawn)
                 {
-                    Transform selectable = spawnSelectable(layer1);
+                    Transform selectable = spawnSelectable(groundLayer1);
                     selectable.parent = selectablesFolder;
                     timerLayer1 = 0f;
                 }
@@ -125,7 +132,7 @@ public class SelectableManager : MonoBehaviour
             {
                 if (Random.value >= (maxTimeBetweenSpawn - timerLayer2) / maxTimeBetweenSpawn)
                 {
-                    Transform selectable = spawnSelectable(layer2);
+                    Transform selectable = spawnSelectable(groundLayer2);
                     selectable.parent = selectablesFolder;
                     timerLayer2 = 0f;
                 }
@@ -135,7 +142,7 @@ public class SelectableManager : MonoBehaviour
             {
                 if (Random.value >= (maxTimeBetweenSpawn - timerLayer3) / maxTimeBetweenSpawn)
                 {
-                    Transform selectable = spawnSelectable(layer3);
+                    Transform selectable = spawnSelectable(groundLayer3);
                     selectable.parent = selectablesFolder;
                     timerLayer3 = 0f;
                 }
@@ -147,15 +154,15 @@ public class SelectableManager : MonoBehaviour
                 if (Random.value >= (maxTimeBetweenCloudSpawn - timerLayerAir1) / maxTimeBetweenCloudSpawn)
                 {
                     // Select air layer
-                    Vector3 layerAir = layerAir1;
+                    Vector3 layerAir = airLayer1;
                     int layerAirIndex = Random.Range(0, 3);
                     if (layerAirIndex == 1)
                     {
-                        layerAir = layerAir2;
+                        layerAir = airLayer2;
                     }
                     else if (layerAirIndex == 2)
                     {
-                        layerAir = layerAir3;
+                        layerAir = airLayer3;
                     }
 
                     Transform selectable = spawnSelectableAir(layerAir);
@@ -200,7 +207,7 @@ public class SelectableManager : MonoBehaviour
 
         // Select size
         Transform prefab = smallPrefab;
-        int size = Random.Range(0, 6);
+        /*int size = Random.Range(0, 6);
         if (size >= 3 && size < 5)
         {
             prefab = mediumPrefab;
@@ -208,7 +215,7 @@ public class SelectableManager : MonoBehaviour
         else if (size == 5)
         {
             prefab = bigPrefab;
-        }
+        }*/
 
         // Spawn the selectable
         Transform selectable = Instantiate(prefab) as Transform;
@@ -226,6 +233,36 @@ public class SelectableManager : MonoBehaviour
         return selectable;
     }
 
+    /// <summary>
+    /// Spawn a selectable in on of the air layer and return the transform of the object.
+    /// </summary>
+    /// <returns></returns>
+    private Transform spawnSelectableAir(Vector3 layer)
+    {
+        // Select size
+        Transform prefab = cloudSmall;
+        /*int size = Random.Range(0, 6);
+        if (size >= 3 && size < 5)
+        {
+            prefab = cloudMedium;
+        }
+        else if (size == 5)
+        {
+            prefab = cloudBig;
+        }*/
+
+        // Spawn the selectable
+        Transform selectable = Instantiate(prefab) as Transform;
+        selectable.position = new Vector3(startArea.position.x, layer.y, layer.z);
+
+        // Randomize the rotation
+        selectable.Rotate(selectable.up, Random.rotation.eulerAngles.y, Space.World);
+
+        // Set speed
+        selectable.GetComponent<Selectable>().speed = Random.Range(minCloudSpeed, maxCloudSpeed);
+
+        return selectable;
+    }
 
     public void spawnBiggerSelectable (GameObject selectable1, GameObject selectable2, Types type, Sizes size)
     {
@@ -284,36 +321,5 @@ public class SelectableManager : MonoBehaviour
         // Destroy the old ones
         Destroy(selectable1);
         Destroy(selectable2);
-    }
-
-    /// <summary>
-    /// Spawn a selectable in on of the air layer and return the transform of the object.
-    /// </summary>
-    /// <returns></returns>
-    private Transform spawnSelectableAir(Vector3 layer)
-    {
-        // Select size
-        Transform prefab = cloudSmall;
-        int size = Random.Range(0, 6);
-        if (size >= 3 && size < 5)
-        {
-            prefab = cloudMedium;
-        }
-        else if (size == 5)
-        {
-            prefab = cloudBig;
-        }
-
-        // Spawn the selectable
-        Transform selectable = Instantiate(prefab) as Transform;
-        selectable.position = new Vector3(startArea.position.x, layer.y, layer.z);
-
-        // Randomize the rotation
-        selectable.Rotate(selectable.up, Random.rotation.eulerAngles.y, Space.World);
-
-        // Set speed
-        selectable.GetComponent<Selectable>().speed = Random.Range(minCloudSpeed, maxCloudSpeed);
-
-        return selectable;
     }
 }
