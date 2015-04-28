@@ -1,15 +1,24 @@
 fileFormatVersion: 2
-guid: 637995e6e0568bd479f7abc7a82af102
-timeCreated: 1429457696
+guid: 0fbcebaad259ec34389ed910372d7625
+timeCreated: 1430252072
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Icosphere
+    100004: Icosphere.001
     400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Cylinder
+    400002: Icosphere
+    400004: Icosphere.001
+    2300000: Icosphere
+    2300002: Icosphere.001
+    2300004: //RootNode
+    3300000: Icosphere
+    3300002: Icosphere.001
+    3300004: //RootNode
+    4300000: Icosphere.001
+    4300002: Icosphere
   materials:
     importMaterials: 0
     materialName: 0
