@@ -6,10 +6,20 @@ ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Cylinder
+    100004: Icosphere
     400000: //RootNode
+    400002: Cylinder
+    400004: Icosphere
     2300000: //RootNode
+    2300002: Cylinder
+    2300004: Icosphere
     3300000: //RootNode
+    3300002: Cylinder
+    3300004: Icosphere
     4300000: Icosphere.001
+    4300002: Cylinder
+    4300004: Icosphere
   materials:
     importMaterials: 0
     materialName: 0
@@ -45,9 +55,9 @@ ModelImporter:
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
-    normalSmoothAngle: 60
+    normalSmoothAngle: 0
     splitTangentsAcrossUV: 1
-    normalImportMode: 0
+    normalImportMode: 1
     tangentImportMode: 1
   importAnimation: 1
   copyAvatar: 0

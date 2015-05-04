@@ -24,6 +24,7 @@ ModelImporter:
     4300000: Icosphere_003
     4300002: Icosphere_002
     4300004: Icosphere_001
+    4300006: Icosphere
     7400000: Default Take
     9500000: //RootNode
   materials:
@@ -61,9 +62,9 @@ ModelImporter:
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
-    normalSmoothAngle: 60
+    normalSmoothAngle: 0
     splitTangentsAcrossUV: 1
-    normalImportMode: 0
+    normalImportMode: 1
     tangentImportMode: 1
   importAnimation: 1
   copyAvatar: 0
