@@ -24,7 +24,15 @@ public class Selectable : MonoBehaviour
     /// <summary>
     /// Whether the selectable was selected.
     /// </summary>
-    private bool selected;
+    public bool selected { get; private set; }
+    /// <summary>
+    /// Whether the selectable is the result of a merge or not.
+    /// </summary>
+    public bool haveBeenMerged { get; set; }
+    /// <summary>
+    /// Whether the selectable is already merging with another.
+    /// </summary>
+    private bool beingMerged;
 
 
 	// Use this for initialization
@@ -34,7 +42,15 @@ public class Selectable : MonoBehaviour
         selectableManager = GetComponentInParent<SelectableManager>();
 
         // Init
-        selected = false;
+        if (haveBeenMerged)
+        {
+            selected = true;
+        }
+        else
+        {
+            selected = false;
+        }
+        beingMerged = false;
 	}
 	
 	// Update is called once per frame
@@ -50,12 +66,14 @@ public class Selectable : MonoBehaviour
     {
         if (!selected)
         {
+            Player.instance.incSelectable();
             selected = true;
             transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 2f);
             gameObject.layer = LayerMask.NameToLayer("Selected");
         }
         else
         {
+            Player.instance.decSelectable();
             selected = false;
             transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 2f);
             gameObject.layer = LayerMask.NameToLayer("Selectable");
@@ -65,10 +83,13 @@ public class Selectable : MonoBehaviour
 
     void OnTriggerEnter (Collider collider)
     {
-        if (collider.gameObject.layer == LayerMask.NameToLayer("Selected") && collider.GetComponent<Selectable>().type == type && size == collider.GetComponent<Selectable>().size && size != SelectableManager.Sizes.Big)
+        Selectable other = collider.GetComponent<Selectable>();
+        if ((collider.gameObject.layer == LayerMask.NameToLayer("Selected") ^ gameObject.layer == LayerMask.NameToLayer("Selected")) && (!beingMerged && !other.beingMerged) && other.type == type && other.size == size && size != SelectableManager.Sizes.Big)
         {
-            // TODO stop from spawning two versions
-            selectableManager.spawnBiggerSelectable(gameObject, collider.gameObject, type, size);
+            other.beingMerged = true;
+            beingMerged = true;
+            AudioManager.instance.playMerging();
+            selectableManager.mergeSelectables(gameObject, collider.gameObject, type, size);
         }
     }
 }

@@ -15,13 +15,20 @@ public class SelectableManager : MonoBehaviour
 
     /************* PUBLIC VARIABLES **************/
     // Procedural spawning of selectables
-    public float minTimeBetweenSpawn;
-    public float maxTimeBetweenSpawn;
-    public float selectableSpeed;
-    public float minTimeBetweenCloudSpawn;
-    public float maxTimeBetweenCloudSpawn;
+    public float minTimeBetweenLayer1Spawn;
+    public float maxTimeBetweenLayer1Spawn;
+    public float minTimeBetweenLayer2Spawn;
+    public float maxTimeBetweenLayer2Spawn;
+    public float minTimeBetweenLayer3Spawn;
+    public float maxTimeBetweenLayer3Spawn;
+    public float groundSpeed;
+    public float mountainSpeed;
     public float minCloudSpeed;
     public float maxCloudSpeed;
+    public float minTimeBetweenCloudSpawn;
+    public float maxTimeBetweenCloudSpawn;
+    public float minTimeBetweenMountainSpawn;
+    public float maxTimeBetweenMountainSpawn;
 
     // Prefabs
     public Transform[] selectablePrefabs;
@@ -43,8 +50,7 @@ public class SelectableManager : MonoBehaviour
 
 
     /************* IMPORTANT GAME OBJECTS **************/
-    // Warping areas
-    private Transform startArea;
+    // Warping area
     private Transform selectablesFolder;
     // Layers
     private Vector3 groundLayer1;
@@ -52,7 +58,7 @@ public class SelectableManager : MonoBehaviour
     private Vector3 groundLayer3;
     private Vector3 airLayer1;
     private Vector3 airLayer2;
-    private Vector3 airLayer3;
+    private Vector3 mountainLayer;
 
 
     /************* PRIVATE VARIABLES **************/
@@ -61,14 +67,14 @@ public class SelectableManager : MonoBehaviour
     private float timerLayer1;
     private float timerLayer2;
     private float timerLayer3;
-    private float timerLayerAir1;
+    private float timerAirLayer;
+    private float timerMountainLayer;
 
 
 	// Use this for initialization
 	void Start ()
     {
         // Important game objects
-        startArea = transform.FindChild("StartArea");
         selectablesFolder = transform.FindChild("Selectables");
         Transform layers = transform.FindChild("Layers");
         groundLayer1 = layers.FindChild("GroundLayer1").transform.position;
@@ -76,14 +82,15 @@ public class SelectableManager : MonoBehaviour
         groundLayer3 = layers.FindChild("GroundLayer3").transform.position;
         airLayer1 = layers.FindChild("AirLayer1").transform.position;
         airLayer2 = layers.FindChild("AirLayer2").transform.position;
-        airLayer3 = layers.FindChild("AirLayer3").transform.position;
+        mountainLayer = layers.FindChild("MountainLayer").transform.position;
 
         // Init
         timerRandomSpawn = 0f;
         timerLayer1 = 0f;
         timerLayer2 = 0f;
         timerLayer3 = 0f;
-        timerLayerAir1 = 0f;
+        timerAirLayer = 0f;
+        timerMountainLayer = 0f;
 	}
 
 	// Update is called once per frame
@@ -112,62 +119,70 @@ public class SelectableManager : MonoBehaviour
         timerLayer1 += Time.deltaTime;
         timerLayer2 += Time.deltaTime;
         timerLayer3 += Time.deltaTime;
-        timerLayerAir1 += Time.deltaTime;
+        timerAirLayer += Time.deltaTime;
+        timerMountainLayer += Time.deltaTime;
 
         // Check every second if a new spawn can happen
         if (timerRandomSpawn >= 1f)
         {
             // Spawn layer ground 1
-            if (timerLayer1 >= minTimeBetweenSpawn)
+            if (timerLayer1 >= minTimeBetweenLayer1Spawn)
             {
-                if (Random.value >= (maxTimeBetweenSpawn - timerLayer1) / maxTimeBetweenSpawn)
+                if (Random.value >= (maxTimeBetweenLayer1Spawn - timerLayer1) / maxTimeBetweenLayer1Spawn)
                 {
-                    Transform selectable = spawnSelectable(groundLayer1);
+                    Transform selectable = spawnGroundSelectable(groundLayer1);
                     selectable.parent = selectablesFolder;
                     timerLayer1 = 0f;
                 }
             }
             // Spawn layer ground 2
-            if (timerLayer2 >= minTimeBetweenSpawn)
+            if (timerLayer2 >= minTimeBetweenLayer2Spawn)
             {
-                if (Random.value >= (maxTimeBetweenSpawn - timerLayer2) / maxTimeBetweenSpawn)
+                if (Random.value >= (maxTimeBetweenLayer2Spawn - timerLayer2) / maxTimeBetweenLayer2Spawn)
                 {
-                    Transform selectable = spawnSelectable(groundLayer2);
+                    Transform selectable = spawnGroundSelectable(groundLayer2);
                     selectable.parent = selectablesFolder;
                     timerLayer2 = 0f;
                 }
             }
             // Spawn layer ground 3
-            if (timerLayer3 >= minTimeBetweenSpawn)
+            if (timerLayer3 >= minTimeBetweenLayer3Spawn)
             {
-                if (Random.value >= (maxTimeBetweenSpawn - timerLayer3) / maxTimeBetweenSpawn)
+                if (Random.value >= (maxTimeBetweenLayer3Spawn - timerLayer3) / maxTimeBetweenLayer3Spawn)
                 {
-                    Transform selectable = spawnSelectable(groundLayer3);
+                    Transform selectable = spawnGroundSelectable(groundLayer3);
                     selectable.parent = selectablesFolder;
                     timerLayer3 = 0f;
                 }
             }
 
-            // Spawn layer air 1
-            if (timerLayerAir1 >= minTimeBetweenCloudSpawn)
+            // Spawn layer air 1 and 2
+            if (timerAirLayer >= minTimeBetweenCloudSpawn)
             {
-                if (Random.value >= (maxTimeBetweenCloudSpawn - timerLayerAir1) / maxTimeBetweenCloudSpawn)
+                if (Random.value >= (maxTimeBetweenCloudSpawn - timerAirLayer) / maxTimeBetweenCloudSpawn)
                 {
                     // Select air layer
                     Vector3 layerAir = airLayer1;
-                    int layerAirIndex = Random.Range(0, 3);
+                    int layerAirIndex = Random.Range(0, 2);
                     if (layerAirIndex == 1)
                     {
                         layerAir = airLayer2;
                     }
-                    else if (layerAirIndex == 2)
-                    {
-                        layerAir = airLayer3;
-                    }
 
-                    Transform selectable = spawnSelectableAir(layerAir);
+                    Transform selectable = spawnAirSelectable(layerAir);
                     selectable.parent = selectablesFolder;
-                    timerLayerAir1 = 0f;
+                    timerAirLayer = 0f;
+                }
+            }
+
+            // Spawn mountain layer
+            if (timerMountainLayer >= minTimeBetweenMountainSpawn)
+            {
+                if (Random.value >= (maxTimeBetweenMountainSpawn - timerMountainLayer) / maxTimeBetweenMountainSpawn)
+                {
+                    Transform selectable = spawnMountainSelectable(mountainLayer);
+                    selectable.parent = selectablesFolder;
+                    timerMountainLayer = 0f;
                 }
             }
 
@@ -179,56 +194,29 @@ public class SelectableManager : MonoBehaviour
     /// Spawn a selectable and return the transform of the object.
     /// </summary>
     /// <returns></returns>
-    private Transform spawnSelectable (Vector3 layer)
+    private Transform spawnGroundSelectable (Vector3 layer)
     {
         // Select type
-        Transform smallPrefab = buildingSmall;
-        Transform mediumPrefab = buildingMedium;
-        Transform bigPrefab = buildingBig;
+        Transform prefab = buildingSmall;
         int spawnType = Random.Range(0, 3);
         switch (spawnType)
         {
             case 0:
-                smallPrefab = buildingSmall;
-                mediumPrefab = buildingMedium;
-                bigPrefab = buildingBig;
+                prefab = buildingSmall;
                 break;
             case 1:
-                smallPrefab = mountainSmall;
-                mediumPrefab = mountainMedium;
-                bigPrefab = mountainBig;
+                prefab = rockSmall;
                 break;
             case 2:
-                smallPrefab = treeSmall;
-                mediumPrefab = treeMedium;
-                bigPrefab = treeBig;
+                prefab = treeSmall;
                 break;
         }
-
-        // Select size
-        Transform prefab = smallPrefab;
-        /*int size = Random.Range(0, 6);
-        if (size >= 3 && size < 5)
-        {
-            prefab = mediumPrefab;
-        }
-        else if (size == 5)
-        {
-            prefab = bigPrefab;
-        }*/
 
         // Spawn the selectable
         Transform selectable = Instantiate(prefab) as Transform;
-        selectable.position = new Vector3(startArea.position.x, layer.y, layer.z);
-        
-        // Adapt to the inclination of the ground
-        selectable.Rotate(selectable.right, 4f, Space.World);
+        selectable.position = new Vector3(layer.x, layer.y, layer.z);
 
-        // Randomize the rotation
-        selectable.Rotate(selectable.up, Random.rotation.eulerAngles.y, Space.World);
-
-        // Set speed
-        selectable.GetComponent<Selectable>().speed = selectableSpeed;
+        initGroundSelectable(selectable);
 
         return selectable;
     }
@@ -237,34 +225,73 @@ public class SelectableManager : MonoBehaviour
     /// Spawn a selectable in on of the air layer and return the transform of the object.
     /// </summary>
     /// <returns></returns>
-    private Transform spawnSelectableAir(Vector3 layer)
+    private Transform spawnAirSelectable(Vector3 layer)
     {
-        // Select size
-        Transform prefab = cloudSmall;
-        /*int size = Random.Range(0, 6);
-        if (size >= 3 && size < 5)
-        {
-            prefab = cloudMedium;
-        }
-        else if (size == 5)
-        {
-            prefab = cloudBig;
-        }*/
+        // Spawn the cloud
+        Transform selectable = Instantiate(cloudSmall) as Transform;
+        selectable.position = new Vector3(layer.x, layer.y, layer.z);
 
-        // Spawn the selectable
-        Transform selectable = Instantiate(prefab) as Transform;
-        selectable.position = new Vector3(startArea.position.x, layer.y, layer.z);
+        initAirSelectable(selectable);
+
+        return selectable;
+    }
+
+    /// <summary>
+    /// Spawn a mountain in on of the mountain layer and return the transform of the object.
+    /// </summary>
+    /// <returns></returns>
+    private Transform spawnMountainSelectable(Vector3 layer)
+    {
+        // Spawn the cloud
+        Transform selectable = Instantiate(mountainSmall) as Transform;
+        selectable.position = new Vector3(layer.x, layer.y, layer.z);
+
+        initMountainSelectable(selectable);
+
+        return selectable;
+    }
+
+    private void initGroundSelectable(Transform selectable)
+    {
+        // Adapt to the inclination of the ground
+        selectable.Rotate(selectable.right, 7f, Space.World);
 
         // Randomize the rotation
         selectable.Rotate(selectable.up, Random.rotation.eulerAngles.y, Space.World);
 
         // Set speed
-        selectable.GetComponent<Selectable>().speed = Random.Range(minCloudSpeed, maxCloudSpeed);
-
-        return selectable;
+        selectable.GetComponent<Selectable>().speed = groundSpeed;
     }
 
-    public void spawnBiggerSelectable (GameObject selectable1, GameObject selectable2, Types type, Sizes size)
+    private void initMountainSelectable(Transform selectable)
+    {
+        // Adapt to the inclination of the ground
+        selectable.Rotate(selectable.right, 16f, Space.World);
+
+        // Randomize the rotation
+        selectable.Rotate(selectable.up, Random.rotation.eulerAngles.y, Space.World);
+
+        // Set speed
+        selectable.GetComponent<Selectable>().speed = mountainSpeed;
+    }
+
+    private void initAirSelectable(Transform selectable)
+    {
+        // Randomize the rotation
+        selectable.Rotate(selectable.up, Random.rotation.eulerAngles.y, Space.World);
+
+        // Set speed
+        selectable.GetComponent<Selectable>().speed = Random.Range(minCloudSpeed, maxCloudSpeed);
+    }
+
+    /// <summary>
+    /// Merge two selectables together to make a bigger one.
+    /// </summary>
+    /// <param name="selectable1"></param>
+    /// <param name="selectable2"></param>
+    /// <param name="type"></param>
+    /// <param name="size"></param>
+    public void mergeSelectables (GameObject selectable1, GameObject selectable2, Types type, Sizes size)
     {
         Transform newSelectablePrefab = buildingBig;
         switch (type)
@@ -299,6 +326,16 @@ public class SelectableManager : MonoBehaviour
                     newSelectablePrefab = mountainBig;
                 }
                 break;
+            case Types.Rock:
+                if (size == Sizes.Small)
+                {
+                    newSelectablePrefab = rockMedium;
+                }
+                else if (size == Sizes.Medium)
+                {
+                    newSelectablePrefab = rockBig;
+                }
+                break;
             case Types.Cloud:
                 if (size == Sizes.Small)
                 {
@@ -311,12 +348,30 @@ public class SelectableManager : MonoBehaviour
                 break;
         }
         Transform newSelectable = Instantiate(newSelectablePrefab) as Transform;
-        newSelectable.position = new Vector3(selectable1.transform.position.x + Mathf.Abs(selectable1.transform.position.x - selectable2.transform.position.x) / 2, selectable1.transform.position.y, selectable1.transform.position.z);
+        GameObject selectable = selectable1;
+        if (selectable2.GetComponent<Selectable>().selected)
+        {
+            selectable = selectable2;
+        }
 
-        // Adapt to the inclination of the ground
-        newSelectable.Rotate(newSelectable.right, 4f, Space.World);
-        // Randomize the rotation
-        newSelectable.Rotate(newSelectable.up, Random.rotation.eulerAngles.y, Space.World);
+        newSelectable.position = new Vector3(selectable1.transform.position.x + Mathf.Abs(selectable1.transform.position.x - selectable2.transform.position.x) / 2, selectable.transform.position.y, selectable.transform.position.z);
+        newSelectable.parent = selectablesFolder;
+
+        // Init
+        newSelectable.GetComponent<Selectable>().haveBeenMerged = true;
+        newSelectable.gameObject.layer = LayerMask.NameToLayer("Selected");
+        if (type == Types.Cloud)
+        {
+            initAirSelectable(newSelectable);
+        }
+        else if (type == Types.Mountain)
+        {
+            initMountainSelectable(newSelectable);
+        }
+        else
+        {
+            initGroundSelectable(newSelectable);
+        }
 
         // Destroy the old ones
         Destroy(selectable1);

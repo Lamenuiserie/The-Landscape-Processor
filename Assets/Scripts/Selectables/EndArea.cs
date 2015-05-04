@@ -16,7 +16,6 @@ public class EndArea : MonoBehaviour
     {
         if (collider.gameObject.layer == LayerMask.NameToLayer("Selectable"))
         {
-            //selectableManager.warp(collider.transform);
             Destroy(collider.gameObject);
         }
     }
