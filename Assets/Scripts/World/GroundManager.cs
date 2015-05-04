@@ -41,7 +41,6 @@ public class GroundManager : MonoBehaviour
             Transform hidden = hiddens.GetChild(i);
             if (hidden.position.x >= hiddenEnd.position.x)
             {
-                float offset = hidden.position.x - hiddenEnd.position.x;
                 hidden.position = new Vector3(hiddenStart.position.x, hidden.position.y, hidden.position.z);
             }
             else
@@ -50,7 +49,7 @@ public class GroundManager : MonoBehaviour
             }
         }
 
-        // Move grounds
+        // Move ground elements
         Transform mostRight = findMostRight();
         if (mostRight.position.x >= groundEnd.position.x)
         {
@@ -59,13 +58,9 @@ public class GroundManager : MonoBehaviour
             {
                 if (grounds[i].position.x >= groundEnd.position.x)
                 {
-                    float offset = grounds[i].position.x - groundEnd.position.x;
-                    Debug.Log(offset);
-                    grounds[i].position = new Vector3(mostLeft.position.x - 168f, grounds[i].position.y, grounds[i].position.z);
+                    grounds[i].position = new Vector3(mostLeft.position.x - 168f, grounds[i].localPosition.y, grounds[i].localPosition.z);
                 }
             }
-
-            //ground.position = new Vector3(mostLeft.position.x - 168f + offset, ground.position.y, ground.position.z);
         }
         else
         {
