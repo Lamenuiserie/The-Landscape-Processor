@@ -5,6 +5,7 @@ public class AudioManager : MonoBehaviour
 {
     // SFX
     public AudioClip[] selections;
+    public AudioClip merging;
 
 	/// <summary>
 	/// The only instance of the audio manager.
@@ -45,6 +46,14 @@ public class AudioManager : MonoBehaviour
         if (!thisAudio.isPlaying)
         {
             thisAudio.PlayOneShot(selections[Random.Range(0, selections.Length)], 0.5f);
+        }
+    }
+
+    public void playMerging()
+    {
+        if (!thisAudio.isPlaying)
+        {
+            thisAudio.PlayOneShot(merging, 0.5f);
         }
     }
 }
