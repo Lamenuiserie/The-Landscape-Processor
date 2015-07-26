@@ -97,7 +97,7 @@ public class SelectableManager : MonoBehaviour
 	void Update ()
     {
         // TODO REMOVE for build
-        if (Input.GetKeyDown(KeyCode.O))
+        /*if (Input.GetKeyDown(KeyCode.O))
         {
             foreach (Selectable selectable in selectablesFolder.GetComponentsInChildren<Selectable>())
             {
@@ -110,7 +110,7 @@ public class SelectableManager : MonoBehaviour
             {
                 selectable.speed -= 20f;
             }
-        }
+        }*/
 
         // Main timer for randomization
         timerRandomSpawn += Time.deltaTime;
